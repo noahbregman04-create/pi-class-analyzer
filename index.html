@@ -4149,6 +4149,7 @@ const REFRESH = (() => {
   const COOLDOWN_MS = 60000; // claude.ai: at most one request a minute
   const WATCHDOG_MS = 300000; // worker: give up after 5 minutes without progress
   const REQUEST_MINUTES = 3; // claude.ai: fetch, build and publish on the Mac
+  const LIVE_URL = 'https://noahbregman04-create.github.io/pi-class-analyzer/'; // same page, where the button refreshes on the spot
   let reqId = 0, worker = null, watchdog = 0, ticker = 0, step = '', t0 = 0;
 
   const onClaudeAi = () => typeof claude !== 'undefined' && !!claude && typeof claude.use === 'function';
@@ -4267,7 +4268,14 @@ onmessage = (e) => {
     row.append(b, s);
     $('fresh').insertAdjacentElement('afterend', row);
     b.addEventListener('click', () => (onClaudeAi() ? askClaude() : runHere()));
-    if (onClaudeAi()) checkListening();
+    if (onClaudeAi()) {
+      const a = document.createElement('a');
+      a.href = LIVE_URL;
+      a.textContent = 'Open the live site (refreshes on the spot)';
+      a.className = 'refresh-live';
+      row.append(a);
+      checkListening();
+    }
   }
   return { init };
 })();
